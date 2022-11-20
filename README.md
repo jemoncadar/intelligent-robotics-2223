@@ -8,7 +8,7 @@ In order to start the launch file provided by the exercise you must execute:
 
 ``roslaunch exercise_4_1 static_robot_tf.launch``
 ### Playing the bag
-In order to play the bag provided by the exercise you have to execute, in the folder of the bag:
+In order to play the bag provided by the exercise you have to execute, in bag folder:
 
 ``rosbag play bag_es_41.bag -l``
 ### Starting the apriltag node
