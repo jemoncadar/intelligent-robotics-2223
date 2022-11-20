@@ -12,11 +12,11 @@ In order to play the bag provided by the exercise you have to execute, in bag fo
 
 ``rosbag play bag_es_41.bag -l``
 ### Starting the apriltag node
-In order to start the apriltag_ros node, that detects the apriltags with the camera data you have to execute:
+In order to start the apriltag_ros node that detects the apriltags with the camera data you have to execute:
 
 ```roslaunch apriltag_ros continuous_detection.launch camera_name:=/kinect/rgb image_topic:=image_rect_color```
 
-After that you will se info through the ``tag_detections`` topic.
+After that, you will se info through the ``tag_detections`` topic.
 
 ### Starting the client
 In order to start the client developed by us you have to execute:
