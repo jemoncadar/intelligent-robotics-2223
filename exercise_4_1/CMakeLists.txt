@@ -208,8 +208,8 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(client_node src/client.cpp)
+add_executable(detections_printer_node src/detections_printer.cpp)
 
-add_dependencies(client_node exercise_4_1_generate_messages_cpp)
+add_dependencies(detections_printer_node exercise_4_1_generate_messages_cpp)
 
-target_link_libraries(client_node ${catkin_LIBRARIES})
+target_link_libraries(detections_printer_node ${catkin_LIBRARIES})
