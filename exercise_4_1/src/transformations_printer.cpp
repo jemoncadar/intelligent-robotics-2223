@@ -5,8 +5,7 @@
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 //#include "var.h"
 
-tf2_ros::Buffer* tfBuffer;
-tf2_ros::TransformListener* tfListener;
+geometry_msgs::TransformStamped transformStamped;
 
 void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 {
@@ -23,20 +22,6 @@ void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 		geometry_msgs::Pose poseAndOrientation = poseWithCovariance.pose;
 
 		//TODO: transformation
-        geometry_msgs::TransformStamped transformStamped;
-        
-        try
-        {
-            transformStamped = tfBuffer->lookupTransform("camera_base", "base_link",
-            ros::Time(0));
-        }
-        catch (tf2::TransformException &ex) 
-        {
-            ROS_WARN("%s",ex.what());
-            ros::Duration(1.0).sleep();
-            continue;
-        }
-
         tf2::doTransform(poseAndOrientation, poseAndOrientation, transformStamped);
 
         geometry_msgs::Point position = poseAndOrientation.position;
@@ -50,13 +35,25 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "transformations_printer_node");
 	
-    //tfBuffer = new tf2_ros::Buffer();
-    //tfListener = new tf2_ros::TransformListener(&tfBuffer);
+    tf2_ros::Buffer tfBuffer;
+	tf2_ros::TransformListener tfListener(tfBuffer);
 
-	ROS_INFO("Se ha inicializado el nodo");
+	//Get the transformation
+	try
+	{
+		transformStamped = tfBuffer.lookupTransform("/base_link", "/camera_frame",
+		ros::Time(0));
+	}
+	catch (tf2::TransformException &ex) 
+	{
+		ROS_WARN("%s",ex.what());
+		ros::Duration(1.0).sleep();
+	}
 
 	ros::NodeHandle n;
 	ros::Subscriber sub = n.subscribe("tag_detections",1000, chatterCallback);
+
+	ROS_INFO("Se ha inicializado el nodo");
 	
 	ros::spin();
 	
