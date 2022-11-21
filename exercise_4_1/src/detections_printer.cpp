@@ -48,6 +48,7 @@ void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 		ROS_INFO("ORIENTATION: (%f, %f, %f, %f)", orientation.x, orientation.y, orientation.z, orientation.w);
 	}
 }
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "detections_printer_node");

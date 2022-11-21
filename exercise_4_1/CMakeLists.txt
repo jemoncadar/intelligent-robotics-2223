@@ -209,7 +209,9 @@ include_directories(
 # catkin_add_nosetests(test)
 
 add_executable(detections_printer_node src/detections_printer.cpp)
-
 add_dependencies(detections_printer_node exercise_4_1_generate_messages_cpp)
-
 target_link_libraries(detections_printer_node ${catkin_LIBRARIES})
+
+add_executable(transformations_printer_node src/transformations_printer.cpp)
+add_dependencies(transformations_printer_node exercise_4_1_generate_messages_cpp)
+target_link_libraries(transformations_printer_node ${catkin_LIBRARIES})
