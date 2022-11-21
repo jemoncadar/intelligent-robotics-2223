@@ -17,7 +17,7 @@ First starting the apriltag_ros node we have to specify what tags we are going t
 tag_bundles:
   [
     {
-        name: 'EXERCISE_4_BUNDLE',
+        name: 'EXERCISE_4_A_BUNDLE',
         layout:
         [
             {id: 0, size: 0.15},
