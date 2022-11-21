@@ -30,7 +30,7 @@ tag_bundles:
     }
   ]
 ```
-We need to do this because of the video stream provided in the exercise. It shows 6 apriltags in a bundle, so we will be detecting bundles of apriltags.
+We need to do this because of the video stream provided in the exercise. It shows 6 apriltags in a bundle, so we will be detecting bundles of apriltags. Info about sizes: https://github.com/AprilRobotics/apriltag/wiki/AprilTag-User-Guide#pose-estimation
 
 In order to start the apriltag_ros node that detects the apriltags with the camera data you have to execute:
 
