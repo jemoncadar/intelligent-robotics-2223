@@ -4,14 +4,21 @@
 
 void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 {
+	ROS_INFO("Received tag detection!");
+
 	const auto& array = msg.detections;
 	
 	for(apriltag_ros::AprilTagDetection detection : array)
 	{
+		std::string idsString = "";
+		std::string sizesString = "";
+
 		const auto& ids = detection.id;
 		const auto& sizes = detection.size;
+
 		geometry_msgs::PoseWithCovarianceStamped pose = detection.pose;
 		geometry_msgs::PoseWithCovariance poseWithCovariance = pose.pose;
+
 		const auto& covariance = poseWithCovariance.covariance; // PRINT
 		geometry_msgs::Pose poseAndOrientation = poseWithCovariance.pose;
 		geometry_msgs::Point position = poseAndOrientation.position; // PRINT
@@ -20,12 +27,15 @@ void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 
 		for (int id : ids)
 		{
-			ROS_INFO("%d", id);
+			idsString += std::to_string(id) + " ";
 		}
+		ROS_INFO("\tIDs [%s]", idsString.c_str());
+
 		for (double size : sizes)
 		{
-			ROS_INFO("%f", size);
+			sizesString += std::to_string(size)  + " ";
 		}
+		ROS_INFO("\tsizes [%s]", sizesString.c_str());
 
 		// ROS_INFO("%s", pose);
 
