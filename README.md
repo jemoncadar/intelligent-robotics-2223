@@ -12,7 +12,7 @@ In order to play the bag provided by the exercise you have to execute, in bag fo
 
 ``rosbag play bag_es_41.bag -l``
 ### Starting the apriltag_ros node
-First starting the apriltag_ros node we have to specify what tags we are going to detect, in terms of their IDs and sizes. This can be done adding to the ``apriltag_ros/apriltag_ros/config/tags.yaml`` config file the following:
+First starting the apriltag_ros node we have to specify what tags we are going to detect, in terms of their IDs and sizes. This can be done adding to the ``src/apriltag_ros/apriltag_ros/config/tags.yaml`` config file the following:
 ```
 tag_bundles:
   [
@@ -30,7 +30,7 @@ tag_bundles:
     }
   ]
 ```
-We need to do this because of the video stream provided in the exercise. It shows 6 apriltags in a bundle, so we will be detecting bundles of apriltags. Info about sizes: https://github.com/AprilRobotics/apriltag/wiki/AprilTag-User-Guide#pose-estimation
+We need to do this because of the video stream provided in the exercise. It shows 6 apriltags in a bundle, so we will be detecting bundles of apriltags. Info about sizes: https://github.com/AprilRobotics/apriltag/wiki/AprilTag-User-Guide#pose-estimation. Info about parameters: http://wiki.ros.org/apriltag_ros/Tutorials/Detection%20in%20a%20video%20stream.
 
 In order to start the apriltag_ros node that detects the apriltags with the camera data you have to execute:
 
