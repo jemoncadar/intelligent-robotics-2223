@@ -26,35 +26,41 @@ void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 
         geometry_msgs::Point position = poseAndOrientation.position;
 		geometry_msgs::Quaternion orientation = poseAndOrientation.orientation;
-        ROS_INFO("POSITION: (%f, %f, %f)", position.x, position.y, position.z);
-		ROS_INFO("ORIENTATION: (%f, %f, %f, %f)", orientation.x, orientation.y, orientation.z, orientation.w);
+        ROS_INFO("\tPOSITION: (%f, %f, %f)", position.x, position.y, position.z);
+		ROS_INFO("\tORIENTATION: (%f, %f, %f, %f)", orientation.x, orientation.y, orientation.z, orientation.w);
 	}
 }
 
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "transformations_printer_node");
-	
-    tf2_ros::Buffer tfBuffer;
-	tf2_ros::TransformListener tfListener(tfBuffer);
-
-	//Get the transformation
-	try
-	{
-		transformStamped = tfBuffer.lookupTransform("/base_link", "/camera_frame",
-		ros::Time(0));
-	}
-	catch (tf2::TransformException &ex) 
-	{
-		ROS_WARN("%s",ex.what());
-		ros::Duration(1.0).sleep();
-	}
 
 	ros::NodeHandle n;
-	ros::Subscriber sub = n.subscribe("tag_detections",1000, chatterCallback);
+	ros::Subscriber sub = n.subscribe("tag_detections", 1000, chatterCallback);
 
-	ROS_INFO("Se ha inicializado el nodo");
+	ROS_INFO("Node started");
 	
+	tf2_ros::Buffer tfBuffer;
+	tf2_ros::TransformListener tfListener(tfBuffer);
+
+	bool gotTransformation = false;
+
+	while(!gotTransformation && ros::ok())
+	{
+		try
+		{
+			transformStamped = tfBuffer.lookupTransform("base_link", "camera_base",
+			ros::Time(0));
+			gotTransformation = true;
+			ROS_INFO("Got transformation!");
+		}
+		catch (tf2::TransformException &ex) 
+		{
+			ROS_WARN("%s",ex.what());
+			ros::Duration(1.0).sleep();
+		}
+	}
+
 	ros::spin();
 	
 	return 0;

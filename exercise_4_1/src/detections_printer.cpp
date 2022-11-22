@@ -30,13 +30,13 @@ void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 		{
 			idsString += std::to_string(id) + " ";
 		}
-		ROS_INFO("\tIDs [%s]", idsString.c_str());
+		ROS_INFO("\tIDs: [%s]", idsString.c_str());
 
 		for (double size : sizes)
 		{
 			sizesString += std::to_string(size)  + " ";
 		}
-		ROS_INFO("\tsizes [%s]", sizesString.c_str());
+		ROS_INFO("\tSIZEs: [%s]", sizesString.c_str());
 
 		// ROS_INFO("%s", pose);
 
@@ -44,10 +44,10 @@ void chatterCallback(const apriltag_ros::AprilTagDetectionArray& msg)
 		{
 			covarianceString += std::to_string(item) + " ";
 		}
-		ROS_INFO("\tCovariance [%s]", covarianceString.c_str());
+		ROS_INFO("\tCOVARIANCEs: [%s]", covarianceString.c_str());
 
-		ROS_INFO("POSITION: (%f, %f, %f)", position.x, position.y, position.z);
-		ROS_INFO("ORIENTATION: (%f, %f, %f, %f)", orientation.x, orientation.y, orientation.z, orientation.w);
+		ROS_INFO("\tPOSITION: (%f, %f, %f)", position.x, position.y, position.z);
+		ROS_INFO("\tORIENTATION: (%f, %f, %f, %f)", orientation.x, orientation.y, orientation.z, orientation.w);
 	}
 }
 
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "detections_printer_node");
 	
-	ROS_INFO("Se ha inicializado el nodo");
+	ROS_INFO("Node started");
 
 	ros::NodeHandle n;
 	ros::Subscriber sub = n.subscribe("tag_detections",1000, chatterCallback);
