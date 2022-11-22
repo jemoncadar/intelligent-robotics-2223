@@ -1,6 +1,7 @@
 #include "apriltag_ros/AprilTagDetectionArray.h"
 #include "ros/ros.h"
 #include <opencv2/opencv.hpp>
+#include "sensor_msgs/Image.h"
 
 double x_sum;
 double y_sum;
@@ -42,10 +43,10 @@ void chatterCallbackTagDetections(const apriltag_ros::AprilTagDetectionArray& ms
 	}
 }
 
-/*void chatterCallbackImages(const sensor_msgs::Image& img)
+void chatterCallbackImages(const sensor_msgs::Image& img)
 {
 
-}*/
+}
 
 int main(int argc, char **argv)
 {
@@ -55,7 +56,7 @@ int main(int argc, char **argv)
 
 	ros::NodeHandle n;
 	ros::Subscriber sub = n.subscribe("tag_detections",1000, chatterCallbackTagDetections);
-    //ros::Subscriber subImages = n.subscribe("kinect/rgb/image_rect/color",1000, chatterCallbackImages);
+    ros::Subscriber subImages = n.subscribe("kinect/rgb/image_rect/color",1000, chatterCallbackImages);
 	
 	ros::spin();
 	
