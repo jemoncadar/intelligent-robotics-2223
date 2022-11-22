@@ -38,7 +38,16 @@ In order to start the apriltag_ros node that detects the apriltags with the came
 
 After that, you will se info through the ``tag_detections`` topic.
 
-### Starting the client
+### Starting the node
 In order to start the client developed by us you have to execute:
 
-``rosrun exercise_4_1 client_node``
+``rosrun exercise_4_1 detections_printer_node``
+
+## Exercise 4.1
+
+### Starting the node
+
+With all the previous commands running, execute:
+
+``rosrun exercise_4_1 transformations_printer_node``
+
