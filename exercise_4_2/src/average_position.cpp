@@ -45,7 +45,14 @@ void chatterCallbackTagDetections(const apriltag_ros::AprilTagDetectionArray& ms
 
 void chatterCallbackImages(const sensor_msgs::Image& img)
 {
+    const auto& rvec = (cv::Mat_<float>(3,1) << 0.0, 0.0, 0.0);
+    const auto& tvec = (cv::Mat_<float>(3,1) << x_mean, y_mean, z_mean);
 
+    //cv::projectPoints( InputArray objectPoints,InputArray rvec, InputArray tvec, InputArray cameraMatrix, InputArray distCoeffs, 
+    //OutputArray imagePoints, OutputArray jacobian=noArray(), double aspectRatio=0);
+
+    // Necesitamos "cameraMatrix" y "distCoeffs" que se encuentran en el topic "/kinect/rgb/camera_info". Debemos suscribirnos
+    // a dicho topic también
 }
 
 int main(int argc, char **argv)
