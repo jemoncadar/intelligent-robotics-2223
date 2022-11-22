@@ -32,3 +32,18 @@ With all the previous commands running, execute:
 
 ``rosrun exercise_4_1 transformations_printer_node``
 
+## Exercise 4.2
+### Playing the bag
+In order to play the bag provided by the exercise you have to execute, in bag folder:
+
+``rosbag play bag_es_42.bag -l``
+
+### Starting the apriltag_ros node
+In order to start the apriltag_ros node, execute:
+
+``roslaunch exercise_4_1 iaslab_apriltag.launch``
+
+### Starting the node
+In order to start the client developed by us you have to execute:
+
+``rosrun exercise_4_2 average_position_node``
