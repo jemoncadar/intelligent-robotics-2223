@@ -2,7 +2,7 @@
 Repository for the subject Intelligent Robotics held in University of Padova.
 
 # How to execute
-## Exercise 4.1
+## Exercise 4.1.a
 ### Playing the bag
 In order to play the bag provided by the exercise you have to execute, in bag folder:
 
@@ -24,7 +24,7 @@ In order to start the client developed by us you have to execute:
 
 ``rosrun exercise_4_1 detections_printer_node``
 
-## Exercise 4.1
+## Exercise 4.1.b
 
 ### Starting the node
 
