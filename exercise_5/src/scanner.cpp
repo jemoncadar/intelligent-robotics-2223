@@ -1,7 +1,7 @@
 #include "ros/ros.h"
 #include <sensor_msgs/LaserScan.h>
 #include <vector>
-
+#include <cmath>
 
 void chatterCallback(const sensor_msgs::LaserScan& msg)
 {
@@ -58,6 +58,30 @@ void chatterCallback(const sensor_msgs::LaserScan& msg)
     // We have all the points (in polar coordinates) in the two vectors: 
     // pol_distances and pol_angles
     // The first point, for example, is (pol_distances.at(0), pol_angles.at(0))
+
+    // Next, we will transform the given polar coordinates to cartesian coordinates
+
+    std::vector <float> x_coordinates;
+    std::vector <float> y_coordinates;
+
+    float x;
+    float y;
+
+    for (int i = 0; i < pol_distances.size(); i++)
+    {
+        x = pol_distances.at(i) * cos(pol_angles.at(i));
+        y = pol_distances.at(i) * sin(pol_angles.at(i));
+
+        x_coordinates.push_back(x);
+        y_coordinates.push_back(y);
+    }
+
+    // Printing the cartesian coordinates
+    
+    for (int i = 0; i < x_coordinates.size(); i++)
+    {
+        ROS_INFO("\t\tPOINT (cartesian): (%f, %f)", x_coordinates.at(i), y_coordinates.at(i));
+    }
 }
 
 int main(int argc, char **argv)
