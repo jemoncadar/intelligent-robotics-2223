@@ -204,3 +204,7 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(scanner_node src/scanner.cpp)
+add_dependencies(scanner_node exercise_5_generate_messages_cpp)
+target_link_libraries(scanner_node ${catkin_LIBRARIES})
