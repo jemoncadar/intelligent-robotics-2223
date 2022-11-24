@@ -26,7 +26,7 @@ void chatterCallback(const sensor_msgs::LaserScan& msg)
             rangesStr += std::to_string(r) + " ";
         }
     }
-    ROS_INFO("\trages: [%s]", rangesStr.c_str());
+    ROS_INFO("\tranges: [%s]", rangesStr.c_str());
 
     std::string intensitiesStr = "";
     for (float i : intensities)
@@ -77,7 +77,7 @@ void chatterCallback(const sensor_msgs::LaserScan& msg)
     }
 
     // Printing the cartesian coordinates
-    
+
     for (int i = 0; i < x_coordinates.size(); i++)
     {
         ROS_INFO("\t\tPOINT (cartesian): (%f, %f)", x_coordinates.at(i), y_coordinates.at(i));
