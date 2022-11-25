@@ -47,3 +47,14 @@ In order to start the apriltag_ros node, execute:
 In order to start the client developed by us you have to execute:
 
 ``rosrun exercise_4_2 average_position_node``
+
+## Exercise 5
+### Playing the bag
+In order to play the bag provided by the exercise you have to execute, in bag folder:
+
+``rosbag play bag_es_5.bag -l``
+
+### Starting the node
+In order to start the node developed by us you have to execute:
+
+``rosrun exercise_5 scanner_node``
