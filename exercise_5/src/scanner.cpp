@@ -3,7 +3,7 @@
 #include <vector>
 #include <cmath>
 
-const float THRESHOLD = 0.5;
+const float THRESHOLD = 0.6;
 
 float vecMean(std::vector<float> vector)
 {
@@ -20,10 +20,8 @@ bool isInThreshold(float currentX, float currentY, float lastX, float lastY)
     return sqrt(pow(currentX - lastX,2) + pow(currentY - lastY,2)) < THRESHOLD;
 }
 
-void chatterCallback(const sensor_msgs::LaserScan& msg)
+void printLaserScan(const sensor_msgs::LaserScan& msg)
 {
-	ROS_INFO("Received scan message!");
-
     ROS_INFO("\tangle_min: %f", msg.angle_min);
     ROS_INFO("\tangle_max: %f", msg.angle_max);
     ROS_INFO("\tangle_increment: %f", msg.angle_increment);
@@ -54,7 +52,27 @@ void chatterCallback(const sensor_msgs::LaserScan& msg)
         }
     }
     ROS_INFO("\tintensities: [%s]", intensitiesStr.c_str());
+}
 
+void printCoordinates(std::string title, std::vector<float> c1, std::vector<float> c2)
+{
+    ROS_INFO("%s", title.c_str());
+    for (int i = 0; i < c1.size(); i++)
+    {
+        ROS_INFO("\tPOINT: (%f, %f)", c1.at(i), c2.at(i));
+    }
+}
+
+void chatterCallback(const sensor_msgs::LaserScan& msg)
+{
+	ROS_INFO("Received scan message!");
+
+    //printLaserScan(msg); //Print all info
+
+    const auto& ranges = msg.ranges;
+    const auto& intensities = msg.intensities;
+
+    //Get all polar coordinates in (pol_distances, pol_angles)
     std::vector <float> pol_distances;
     std::vector <float> pol_angles;
     for (int i = 0; i < ranges.size(); i++)
@@ -67,18 +85,10 @@ void chatterCallback(const sensor_msgs::LaserScan& msg)
         }
     }
 
-    ROS_INFO("\tPolar coordinates:");
-    for (int i = 0; i < pol_distances.size(); i++)
-    {
-        ROS_INFO("\t\tPOINT (polar): (%f, %f)", pol_angles.at(i), pol_distances.at(i));
-    }
-
-    // We have all the points (in polar coordinates) in the two vectors: 
-    // pol_distances and pol_angles
+    //printCoordinates("Polar coordinates", pol_distances, pol_angles);
     // The first point, for example, is (pol_distances.at(0), pol_angles.at(0))
 
-    // Next, we will transform the given polar coordinates to cartesian coordinates
-
+    //Get all cartesians coordinates in (x_coordinates, y_coordinates)
     std::vector <float> x_coordinates;
     std::vector <float> y_coordinates;
 
@@ -94,58 +104,73 @@ void chatterCallback(const sensor_msgs::LaserScan& msg)
         y_coordinates.push_back(y);
     }
 
-    // Printing the cartesian coordinates
-    ROS_INFO("\tCartesian coordinates:");
-    for (int i = 0; i < x_coordinates.size(); i++)
-    {
-        ROS_INFO("\t\tPOINT (cartesian): (%f, %f)", x_coordinates.at(i), y_coordinates.at(i));
-    }
+    //printCoordinates("Cartesians coordinates", x_coordinates, y_coordinates);
 
     // Now we iterate through all the points (cartesian coordinates) to detect
     // the people recognized by the scanner
-    // Note that a persona has two legs, so we will see two groups of points for each person.
     int i = 1;
     float current_x; //x_coordinates.at(i)
     float current_y; //y_coordinates.at(i)
 
-    //Mean of the position of the person
-    float xPerson = 0.0;
-    float yPerson = 0.0;
+    std::vector<std::vector<float>> peopleX;
+    std::vector<std::vector<float>> peopleY;
 
-    //all points of a detected person
-    std::vector<float> person_x;
-    std::vector<float> person_y;
-
-    person_x.push_back(x_coordinates.at(0));
-    person_y.push_back(y_coordinates.at(0));
     while(i < x_coordinates.size())
     {
         current_x = x_coordinates.at(i);
         current_y = y_coordinates.at(i);
 
-        if (isInThreshold(current_x, current_y, person_x.back(), person_y.back())) {
-            person_x.push_back(current_x);
-            person_y.push_back(current_y);
+        //ROS_INFO("Point (%f, %f)", current_x, current_y);
+        if (peopleX.empty()) { //No person registered yet
+            //ROS_INFO("Created new person");
+            std::vector<float> newPersonX;
+            std::vector<float> newPersonY;
+
+            newPersonX.push_back(current_x);
+            newPersonY.push_back(current_y);
+
+            peopleX.push_back(newPersonX);
+            peopleY.push_back(newPersonY);
         } else {
-            xPerson = vecMean(person_x);
-            yPerson = vecMean(person_y);
+            //ROS_INFO("Searching person where it fits");
+            bool fitted = false;
+            int j = 0;
+            while (j < peopleX.size() && !fitted) //For every person registered
+            {
+                std::vector<float> currentPersonX = peopleX.at(j);
+                std::vector<float> currentPersonY = peopleY.at(j);
+                if (isInThreshold(current_x, current_y, vecMean(currentPersonX), vecMean(currentPersonY)))
+                {
+                    //ROS_INFO("Added in person %d", j);
+                    fitted = true;
+                    currentPersonX.push_back(current_x);
+                    currentPersonY.push_back(current_y);
+                }
+                j++;
+            }
+            if (!fitted) //This point belogs to a new person
+            {
+                //ROS_INFO("Doesn't fit in any person, creating one");
+                std::vector<float> newPersonX;
+                std::vector<float> newPersonY;
 
-            ROS_INFO("Detected person in (%f, %f)", xPerson, yPerson);
+                newPersonX.push_back(current_x);
+                newPersonY.push_back(current_y);
 
-            person_x.clear();
-            person_y.clear();
-            person_x.push_back(current_x);
-            person_y.push_back(current_y);
+                peopleX.push_back(newPersonX);
+                peopleY.push_back(newPersonY);
+            }
         }
         i++;
     }
 
-    if (person_x.size() > 0)
+    ROS_INFO("People detected: %d", peopleX.size());
+    for (int i = 0; i < peopleX.size(); i++)
     {
-        xPerson = vecMean(person_x);
-        yPerson = vecMean(person_y);
+        std::vector<float> personX = peopleX.at(i);
+        std::vector<float> personY = peopleY.at(i);
 
-        ROS_INFO("Detected person in (%f, %f)", xPerson, yPerson);
+        ROS_INFO("Person %d at (%4.2f, %4.2f)", (i+1), vecMean(personX), vecMean(personY));
     }
 }
 
